@@ -10,6 +10,16 @@ import {
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 
 interface Task {
   id: string;
@@ -89,15 +99,26 @@ export default function TableTasks({ tasksProps }: TableProps) {
               {tarefa.status === "Concluído" ? (
                 <CheckIcon size={18} className="text-green-500" />
               ) : (
-                <Button
-                  variant={"secondary"}
-                  size="sm"
-                  className="text-xs"
-                  onClick={() => handleFinishTask(tarefa)}
-                >
-                  {/* <CheckIcon size={18} className="text-green-500" /> */}
-                  Concluir
-                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant={"secondary"} size="sm" className="text-xs">
+                      Concluir
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Concluir Tarefa?</AlertDialogTitle>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => handleFinishTask(tarefa)}
+                      >
+                        Concluir
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               )}
             </TableCell>
             <TableCell>
