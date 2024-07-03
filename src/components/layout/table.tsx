@@ -111,7 +111,7 @@ export default function TableTasks({ tasksProps }: TableProps) {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction
+                      <AlertDialogAction            
                         onClick={() => handleFinishTask(tarefa)}
                       >
                         Concluir
