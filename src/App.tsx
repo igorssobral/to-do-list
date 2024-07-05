@@ -5,12 +5,10 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "./components/ui/dialog";
-import { Label } from "./components/ui/label";
 import { Input } from "./components/ui/input";
 import { ScrollArea } from "./components/ui/scroll-area";
 import {
@@ -23,6 +21,17 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { cn } from "./lib/utils";
 import TableTasks from "./components/layout/table";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./components/ui/form";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Task {
   id: string;
@@ -30,11 +39,28 @@ interface Task {
   status: string;
   data: Date;
 }
+const today = new Date();
+const formSchema = z.object({
+  task: z
+    .string({ required_error: "nome da tarefa é obrigatório." })
+    .min(1, { message: "nome da tarefa é obrigatório." }),
+  data: z
+    .date({ required_error: "Data Obrigatória." })
+    .refine((data) => data >= today, {
+      message: "A data precisa ser maior ou igual a atual.",
+    }),
+});
 
 function App() {
-  const [date, setDate] = useState<Date>();
-  const [task, setTask] = useState<string>("");
   const [tasks, setTasks] = useState<Task[]>([]);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      task: "",
+      data: undefined,
+    },
+  });
 
   useEffect(() => {
     const savedTasks = localStorage.getItem("tasks");
@@ -46,23 +72,17 @@ function App() {
     }
   }, []);
 
-  function handleSaveTask() {
-    if (date && task.trim() !== "") {
-      const newTask: Task = {
-        id: crypto.randomUUID(),
-        task: task,
-        status: "Pendente",
-        data: date,
-      };
-      const newTasks = [newTask, ...tasks];
-      setTasks(newTasks);
-      localStorage.setItem("tasks", JSON.stringify(newTasks));
-
-      setTask("");
-      setDate(undefined);
-    } else {
-      alert("Campo Vazio");
-    }
+  function handleSaveTask(values: z.infer<typeof formSchema>) {
+    const newTask: Task = {
+      id: crypto.randomUUID(),
+      task: values.task,
+      status: "Pendente",
+      data: values.data,
+    };
+    const newTasks = [newTask, ...tasks];
+    setTasks(newTasks);
+    localStorage.setItem("tasks", JSON.stringify(newTasks));
+    form.reset();
   }
 
   return (
@@ -83,50 +103,71 @@ function App() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="task" className="text-right">
-                Tarefa
-              </Label>
-              <Input
-                id="task"
-                className="col-span-3"
-                value={task}
-                onChange={(e) => setTask(e.target.value)}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="data" className="text-right">
-                Data
-              </Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"ghost"}
-                    className={cn(
-                      "w-[240px] justify-start border text-left font-normal text-zinc-100",
-                      !date && "text-zinc-300",
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? format(date, "PPP") : <span>Pick a date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+            <form
+              onSubmit={form.handleSubmit(handleSaveTask)}
+              className="flex flex-col gap-4"
+            >
+              <Form {...form}>
+                <FormField
+                  control={form.control}
+                  name="task"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tarefa</FormLabel>
+                      <Input id="task" className="col-span-3" {...field} />
+                      <FormControl></FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="data"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Date of birth</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground",
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </Form>
+
+              <Button type="submit" variant="secondary">
+                Salvar Tarefa
+              </Button>
+            </form>
           </div>
-          <DialogFooter>
-            <Button type="submit" variant="secondary" onClick={handleSaveTask}>
-              Salvar Tarefa
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
 
