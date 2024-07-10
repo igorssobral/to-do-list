@@ -132,9 +132,9 @@ function App() {
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
-                              variant={"outline"}
+                              
                               className={cn(
-                                "w-[240px] pl-3 text-left font-normal",
+                                "w-[240px] pl-3 text-left font-normal bg-transparent border hover:bg-zinc-900/50 ",
                                 !field.value && "text-muted-foreground",
                               )}
                             >
