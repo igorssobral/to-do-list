@@ -10,7 +10,6 @@ import {
   DialogTrigger,
 } from "./components/ui/dialog";
 import { Input } from "./components/ui/input";
-import { ScrollArea } from "./components/ui/scroll-area";
 import {
   Popover,
   PopoverContent,
@@ -20,7 +19,6 @@ import { Calendar } from "./components/ui/calendar";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { cn } from "./lib/utils";
-import TableTasks from "./components/layout/table";
 import {
   Form,
   FormControl,
@@ -32,6 +30,7 @@ import {
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import CardComponent from "./components/layout/card";
 
 interface Task {
   id: string;
@@ -132,9 +131,8 @@ function App() {
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
-                              
                               className={cn(
-                                "w-[240px] pl-3 text-left font-normal bg-transparent border hover:bg-zinc-900/50 ",
+                                "w-[240px] border bg-transparent pl-3 text-left font-normal hover:bg-zinc-900/50",
                                 !field.value && "text-muted-foreground",
                               )}
                             >
@@ -171,9 +169,9 @@ function App() {
         </DialogContent>
       </Dialog>
 
-      <ScrollArea className="h-[400px] w-[95%] overflow-y-auto rounded-md border border-zinc-700 lg:w-3/5 2xl:w-2/4">
-        <TableTasks tasksProps={tasks} />
-      </ScrollArea>
+      <div className="flex h-max w-[95%] gap-4 overflow-y-auto border-t border-zinc-600 pt-5 lg:w-3/5 2xl:w-2/4">
+        <CardComponent tasksProps={tasks} />
+      </div>
     </div>
   );
 }
