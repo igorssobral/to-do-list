@@ -79,14 +79,15 @@ export default function CardComponent({ tasksProps }: CardProps) {
           <CardContent className="grid gap-4">
             <Label>Descrição</Label>
             <div className="flex h-24 items-center space-x-4 rounded-md border border-zinc-700 p-4">
-              <p className='text-sm text-zinc-400'>
+              <p className="text-sm text-zinc-400">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmo incididunt ut labore et dolore magna aliqua. Ut
-               .
+                eiusmo incididunt ut labore et dolore magna aliqua. Ut .
               </p>
             </div>
             <Label>Data:</Label>
-            <span className='bg-white font-semibold p-2 rounded-lg text-zinc-900'>{format(task.data, "dd/MM/yyyy")}</span>
+            <span className="rounded-lg bg-white p-2 font-semibold text-zinc-900">
+              {format(task.data, "dd/MM/yyyy")}
+            </span>
           </CardContent>
           <CardFooter className="flex flex-col gap-2">
             {task.status === "Concluído" ? (
@@ -120,15 +121,25 @@ export default function CardComponent({ tasksProps }: CardProps) {
                 </AlertDialogContent>
               </AlertDialog>
             )}
-
-            <Button
-              className="w-full"
-              variant={"destructive"}
-              onClick={() => handleDeleteTask(task)}
-            >
-              <Trash2 size={18} className="text-white" />
-              Excluir
-            </Button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button className="w-full" variant={"destructive"}>
+                  <Trash2 size={18} className="text-white" />
+                  Excluir
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Excluir Tarefa?</AlertDialogTitle>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => handleDeleteTask(task)}>
+                    Excluir Tarefa
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </CardFooter>
         </Card>
       ))}
