@@ -126,7 +126,7 @@ function App() {
                   name="data"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Date of birth</FormLabel>
+                      <FormLabel>Date</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
