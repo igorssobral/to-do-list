@@ -31,6 +31,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CardComponent from "./components/layout/card";
+import { ScrollArea } from "./components/ui/scroll-area";
 
 interface Task {
   id: string;
@@ -85,7 +86,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center space-y-5">
+    <div className="flex h-dvh flex-col items-center pt-14 lg:pt-28 space-y-5">
       <h1 className="text-xl text-zinc-200">Lista de Tarefas</h1>
       <Dialog>
         <DialogTrigger asChild>
@@ -126,7 +127,7 @@ function App() {
                   name="data"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Date of birth</FormLabel>
+                      <FormLabel>Data</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
@@ -139,7 +140,7 @@ function App() {
                               {field.value ? (
                                 format(field.value, "PPP")
                               ) : (
-                                <span>Pick a date</span>
+                                <span>Escolha a data</span>
                               )}
                               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                             </Button>
@@ -169,9 +170,15 @@ function App() {
         </DialogContent>
       </Dialog>
 
-      <div className="flex h-max w-[95%] gap-4 overflow-y-auto border-t border-zinc-600 pt-5 lg:w-3/5 2xl:w-2/4">
-        <CardComponent tasksProps={tasks} />
-      </div>
+      <ScrollArea className="w-full border-t border-zinc-600 pt-5 lg:w-[80%]">
+        <div className="flex flex-wrap items-center justify-center gap-10">
+          {tasks.length > 0 ? (
+            <CardComponent tasksProps={tasks} />
+          ) : (
+            <span>Vazio</span>
+          )}
+        </div>
+      </ScrollArea>
     </div>
   );
 }
