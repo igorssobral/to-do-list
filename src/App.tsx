@@ -53,6 +53,7 @@ const formSchema = z.object({
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [sync, setSync] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,13 +65,18 @@ function App() {
 
   useEffect(() => {
     const savedTasks = localStorage.getItem("tasks");
+    console.log("🚀 ~ useEffect ~ savedTasks:", savedTasks);
 
     if (savedTasks) {
       const allTasks = JSON.parse(savedTasks);
 
       setTasks(allTasks);
     }
-  }, []);
+  }, [sync]);
+
+  function handleSync() {
+    setSync(!sync);
+  }
 
   function handleSaveTask(values: z.infer<typeof formSchema>) {
     const newTask: Task = {
@@ -86,7 +92,7 @@ function App() {
   }
 
   return (
-    <div className="flex h-dvh flex-col items-center pt-14 lg:pt-28 space-y-5">
+    <div className="flex h-dvh flex-col items-center space-y-5 pt-14 lg:pt-28">
       <h1 className="text-xl text-zinc-200">Lista de Tarefas</h1>
       <Dialog>
         <DialogTrigger asChild>
@@ -173,7 +179,7 @@ function App() {
       <ScrollArea className="w-full border-t border-zinc-600 pt-5 lg:w-[80%]">
         <div className="flex flex-wrap items-center justify-center gap-10">
           {tasks.length > 0 ? (
-            <CardComponent tasksProps={tasks} />
+            <CardComponent tasksProps={tasks} sync={handleSync}/>
           ) : (
             <span>Vazio</span>
           )}

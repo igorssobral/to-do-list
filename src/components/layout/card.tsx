@@ -30,9 +30,10 @@ interface Task {
 }
 type CardProps = {
   tasksProps: Task[];
+  sync: ()=>void;
 };
 
-export default function CardComponent({ tasksProps }: CardProps) {
+export default function CardComponent({ tasksProps, sync }: CardProps) {
   const [tasks, setTasks] = useState<Task[]>(tasksProps);
 
   useEffect(() => {
@@ -65,6 +66,7 @@ export default function CardComponent({ tasksProps }: CardProps) {
     const updatedTasks = tasks.filter((t) => t.id !== task.id);
     setTasks(updatedTasks);
     localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+    sync()
   }
 
   return (
