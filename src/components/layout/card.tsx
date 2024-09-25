@@ -78,13 +78,6 @@ export default function CardComponent({ tasksProps, sync }: CardProps) {
             <CardDescription>You have 3 unread messages.</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
-            <Label>Descrição</Label>
-            <div className="flex h-24 items-center space-x-4 rounded-md border border-zinc-700 p-4">
-              <p className="text-sm text-zinc-400">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmo incididunt ut labore et dolore magna aliqua. Ut .
-              </p>
-            </div>
             <Label>Data:</Label>
             <span className="rounded-lg bg-white p-2 font-semibold text-zinc-900">
               {format(task.data, "dd/MM/yyyy")}
@@ -94,7 +87,7 @@ export default function CardComponent({ tasksProps, sync }: CardProps) {
             {task.status === "Concluído" ? (
               <span className="flex w-full items-center justify-center gap-2">
                 <CheckIcon size={18} className="text-green-500" />
-                Tarefa Concluída{" "}
+                Tarefa Concluída
               </span>
             ) : (
               <AlertDialog>
