@@ -72,10 +72,11 @@ export default function CardComponent({ tasksProps, sync }: CardProps) {
   return (
     <>
       {tasks.map((task) => (
-        <Card id={task.id}>
+        <Card className='w-64' key={task.id}>
           <CardHeader>
+          <Label>Tarefa:</Label>
             <CardTitle>{task.task}</CardTitle>
-            <CardDescription>You have 3 unread messages.</CardDescription>
+           
           </CardHeader>
           <CardContent className="grid gap-4">
             <Label>Data:</Label>
@@ -86,7 +87,7 @@ export default function CardComponent({ tasksProps, sync }: CardProps) {
           <CardFooter className="flex flex-col gap-2">
             {task.status === "Concluído" ? (
               <span className="flex w-full items-center justify-center gap-2">
-                <CheckIcon size={18} className="text-green-500" />
+                <CheckIcon size={18} className="text-green-500 animate-pulse" />
                 Tarefa Concluída
               </span>
             ) : (
